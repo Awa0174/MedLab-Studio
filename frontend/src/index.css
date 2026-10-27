@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---- Design tokens -------------------------------------------------------
+   Dark is the default research-console theme; light is opt-in. Every colour
+   used by components and charts is defined here so both themes stay in sync. */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0f14;
+  --surface: #111821;
+  --surface-2: #18212c;
+  --surface-3: #202b38;
+  --border: #253246;
+  --border-strong: #35465f;
+  --fg: #e6edf3;
+  --fg-strong: #ffffff;
+  --muted: #93a4ba;
+  --faint: #5c6c82;
+  --accent: #4cc9f0;
+  --accent-strong: #7ddcf7;
+  --accent-fg: #06202b;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  --trace-noisy: #8392a8;
+  --trace-filtered: #4cc9f0;
+  --trace-clean: #f4a261;
+  --trace-peak: #ff6b6b;
+  --trace-true: #a3e635;
+  --grid: #1c2633;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --surface-2: #f0f3f7;
+  --surface-3: #e5eaf1;
+  --border: #d3dbe5;
+  --border-strong: #b7c3d1;
+  --fg: #1c2733;
+  --fg-strong: #0b1420;
+  --muted: #566475;
+  --faint: #8a98a9;
+  --accent: #0369a1;
+  --accent-strong: #0b4f78;
+  --accent-fg: #ffffff;
+  --ok: #15803d;
+  --warn: #b45309;
+  --danger: #b91c1c;
+  --trace-noisy: #7b8798;
+  --trace-filtered: #0369a1;
+  --trace-clean: #b45309;
+  --trace-peak: #dc2626;
+  --trace-true: #4d7c0f;
+  --grid: #e3e8ef;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 4px 12px rgba(16, 24, 40, 0.06);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-strong: var(--fg-strong);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-fg: var(--accent-fg);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-trace-noisy: var(--trace-noisy);
+  --color-trace-filtered: var(--trace-filtered);
+  --color-trace-clean: var(--trace-clean);
+  --color-trace-peak: var(--trace-peak);
+  --color-trace-true: var(--trace-true);
+  --font-sans: "Inter", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", "SF Mono", ui-monospace, Menlo, monospace;
+  --radius-panel: 10px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Numeric values should line up in tables and read-outs. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 35%, transparent);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
