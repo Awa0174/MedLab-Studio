@@ -12,6 +12,7 @@ import { useExperiment } from "@/api/hooks";
 import type { EcgSimulationRequest } from "@/api/client";
 import { Panel, PanelBody, PanelHeader } from "@/components/ui/Panel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { Segmented } from "@/components/ui/Segmented";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SwitchField } from "@/components/ui/fields";
@@ -145,22 +146,15 @@ export function EcgLabPage() {
                     <TabsTrigger value="signal">Time</TabsTrigger>
                     <TabsTrigger value="spectrum">Spectrum</TabsTrigger>
                   </TabsList>
-                  <TabsList>
-                    <TabsTrigger
-                      value="__overlay"
-                      onClick={() => setCompareMode("overlay")}
-                      data-state={compareMode === "overlay" ? "active" : "inactive"}
-                    >
-                      Overlay
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="__stacked"
-                      onClick={() => setCompareMode("stacked")}
-                      data-state={compareMode === "stacked" ? "active" : "inactive"}
-                    >
-                      Stacked
-                    </TabsTrigger>
-                  </TabsList>
+                  <Segmented
+                    label="Comparison mode"
+                    value={compareMode}
+                    onChange={setCompareMode}
+                    options={[
+                      { value: "overlay", label: "Overlay" },
+                      { value: "stacked", label: "Stacked" },
+                    ]}
+                  />
                 </>
               }
             />

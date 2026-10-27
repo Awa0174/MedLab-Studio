@@ -17,6 +17,15 @@ test("dashboard → ECG lab → save → experiments → reload", async ({ page 
   await expect(page.locator("canvas").first()).toBeVisible();
   await expect(page.getByText("all passed")).toBeVisible();
 
+  // Stacked comparison renders two linked charts; spectrum tab renders its own chart.
+  await page.getByRole("radio", { name: "Stacked" }).click();
+  await expect(page.locator("canvas")).toHaveCount(2);
+  await page.getByRole("radio", { name: "Overlay" }).click();
+  await expect(page.locator("canvas")).toHaveCount(1);
+  await page.getByRole("tab", { name: "Spectrum" }).click();
+  await expect(page.getByText(/welch\(nperseg/)).toBeVisible();
+  await page.getByRole("tab", { name: "Time" }).click();
+
   // Change a parameter via the numeric input and see the status line update.
   const hr = page.getByLabel("Heart rate value in bpm");
   await hr.fill("90");
