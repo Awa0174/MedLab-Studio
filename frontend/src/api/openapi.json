@@ -1,0 +1,1495 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MedLab Studio API",
+    "description": "MedLab Studio is an educational, research and demonstration tool. It is not a medical device, provides no diagnosis and must not be used for treatment decisions. All signals are synthetic unless stated otherwise.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Health",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/labs": {
+      "get": {
+        "tags": [
+          "labs"
+        ],
+        "summary": "List Labs",
+        "operationId": "list_labs_api_labs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LabInfo"
+                  },
+                  "type": "array",
+                  "title": "Response List Labs Api Labs Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/labs/{lab_id}": {
+      "get": {
+        "tags": [
+          "labs"
+        ],
+        "summary": "Read Lab",
+        "operationId": "read_lab_api_labs__lab_id__get",
+        "parameters": [
+          {
+            "name": "lab_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lab Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LabInfo"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/labs/ecg/simulate": {
+      "post": {
+        "tags": [
+          "ecg"
+        ],
+        "summary": "Simulate",
+        "description": "Generate, disturb, filter and analyse a synthetic ECG in one call.",
+        "operationId": "simulate_api_labs_ecg_simulate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EcgSimulationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EcgSimulationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/experiments": {
+      "get": {
+        "tags": [
+          "experiments"
+        ],
+        "summary": "List Experiments",
+        "operationId": "list_experiments_api_experiments_get",
+        "parameters": [
+          {
+            "name": "lab_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/LabType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lab Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExperimentSummary"
+                  },
+                  "title": "Response List Experiments Api Experiments Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "experiments"
+        ],
+        "summary": "Create Experiment",
+        "operationId": "create_experiment_api_experiments_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExperimentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperimentDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/experiments/{experiment_id}": {
+      "get": {
+        "tags": [
+          "experiments"
+        ],
+        "summary": "Read Experiment",
+        "operationId": "read_experiment_api_experiments__experiment_id__get",
+        "parameters": [
+          {
+            "name": "experiment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Experiment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperimentDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "experiments"
+        ],
+        "summary": "Delete Experiment",
+        "operationId": "delete_experiment_api_experiments__experiment_id__delete",
+        "parameters": [
+          {
+            "name": "experiment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Experiment Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/experiments/{experiment_id}/rerun": {
+      "post": {
+        "tags": [
+          "experiments"
+        ],
+        "summary": "Rerun Experiment",
+        "operationId": "rerun_experiment_api_experiments__experiment_id__rerun_post",
+        "parameters": [
+          {
+            "name": "experiment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Experiment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RerunResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalysisParams": {
+        "properties": {
+          "detect_r_peaks": {
+            "type": "boolean",
+            "title": "Detect R Peaks",
+            "default": true
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "filtered",
+              "noisy",
+              "clean"
+            ],
+            "title": "Source",
+            "description": "Which signal the detector runs on",
+            "default": "filtered"
+          },
+          "refractory_ms": {
+            "type": "number",
+            "maximum": 600.0,
+            "minimum": 100.0,
+            "title": "Refractory Ms",
+            "description": "Minimum RR interval",
+            "default": 200.0
+          }
+        },
+        "type": "object",
+        "title": "AnalysisParams"
+      },
+      "BandpassFilter": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "bandpass",
+            "title": "Type",
+            "default": "bandpass"
+          },
+          "low_hz": {
+            "type": "number",
+            "maximum": 500.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Low Hz",
+            "default": 0.5
+          },
+          "high_hz": {
+            "type": "number",
+            "maximum": 1000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "High Hz",
+            "default": 40.0
+          },
+          "order": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Order",
+            "default": 4
+          }
+        },
+        "type": "object",
+        "title": "BandpassFilter"
+      },
+      "DataSource": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "public",
+              "anonymised"
+            ],
+            "title": "Kind"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "license": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "License"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "name",
+          "description"
+        ],
+        "title": "DataSource"
+      },
+      "EcgSimulationRequest": {
+        "properties": {
+          "seed": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "description": "Seed for RR jitter and noise",
+            "default": 42
+          },
+          "signal": {
+            "$ref": "#/components/schemas/SignalParams"
+          },
+          "noise": {
+            "$ref": "#/components/schemas/NoiseParams"
+          },
+          "filters": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/BandpassFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotchFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/MovingAverageFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "bandpass": "#/components/schemas/BandpassFilter",
+                  "moving_average": "#/components/schemas/MovingAverageFilter",
+                  "notch": "#/components/schemas/NotchFilter"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Filters"
+          },
+          "analysis": {
+            "$ref": "#/components/schemas/AnalysisParams"
+          },
+          "include_spectrum": {
+            "type": "boolean",
+            "title": "Include Spectrum",
+            "default": true
+          }
+        },
+        "type": "object",
+        "title": "EcgSimulationRequest"
+      },
+      "EcgSimulationResponse": {
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/ModelInfo"
+          },
+          "algorithm_versions": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Algorithm Versions"
+          },
+          "parameters": {
+            "items": {
+              "$ref": "#/components/schemas/Parameter"
+            },
+            "type": "array",
+            "title": "Parameters"
+          },
+          "time_s": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Time S"
+          },
+          "clean_mv": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Clean Mv"
+          },
+          "noisy_mv": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Noisy Mv"
+          },
+          "filtered_mv": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Filtered Mv"
+          },
+          "true_r_times_s": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "True R Times S"
+          },
+          "r_peaks": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RPeakResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "spectrum": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpectrumResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stats": {
+            "$ref": "#/components/schemas/SignalStats"
+          },
+          "validation": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationCheck"
+            },
+            "type": "array",
+            "title": "Validation"
+          },
+          "result_hash": {
+            "type": "string",
+            "title": "Result Hash"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "algorithm_versions",
+          "parameters",
+          "time_s",
+          "clean_mv",
+          "noisy_mv",
+          "filtered_mv",
+          "true_r_times_s",
+          "r_peaks",
+          "spectrum",
+          "stats",
+          "validation",
+          "result_hash"
+        ],
+        "title": "EcgSimulationResponse"
+      },
+      "ExecutionStatus": {
+        "type": "string",
+        "enum": [
+          "created",
+          "running",
+          "completed",
+          "failed"
+        ],
+        "title": "ExecutionStatus"
+      },
+      "ExperimentCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "lab_type": {
+            "$ref": "#/components/schemas/LabType"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Description",
+            "default": ""
+          },
+          "config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Config"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "lab_type",
+          "config"
+        ],
+        "title": "ExperimentCreate",
+        "description": "Request to create an experiment. `config` is the lab-specific request body."
+      },
+      "ExperimentDetail": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "lab_type": {
+            "$ref": "#/components/schemas/LabType"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Description",
+            "default": ""
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "model": {
+            "$ref": "#/components/schemas/ModelInfo"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExecutionStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "result_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Hash"
+          },
+          "parameters": {
+            "items": {
+              "$ref": "#/components/schemas/Parameter"
+            },
+            "type": "array",
+            "title": "Parameters"
+          },
+          "data_sources": {
+            "items": {
+              "$ref": "#/components/schemas/DataSource"
+            },
+            "type": "array",
+            "title": "Data Sources"
+          },
+          "config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Config"
+          },
+          "algorithm_versions": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Algorithm Versions"
+          },
+          "results": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Results"
+          },
+          "visualization": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Visualization"
+          },
+          "validation": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationCheck"
+            },
+            "type": "array",
+            "title": "Validation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "lab_type",
+          "id",
+          "model",
+          "seed",
+          "status",
+          "created_at",
+          "result_hash",
+          "parameters",
+          "data_sources",
+          "config",
+          "algorithm_versions",
+          "results",
+          "visualization",
+          "validation"
+        ],
+        "title": "ExperimentDetail"
+      },
+      "ExperimentSummary": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "lab_type": {
+            "$ref": "#/components/schemas/LabType"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Description",
+            "default": ""
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "model": {
+            "$ref": "#/components/schemas/ModelInfo"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExecutionStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "result_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Hash"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "lab_type",
+          "id",
+          "model",
+          "seed",
+          "status",
+          "created_at",
+          "result_hash"
+        ],
+        "title": "ExperimentSummary"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "disclaimer": {
+            "type": "string",
+            "title": "Disclaimer",
+            "default": "MedLab Studio is an educational, research and demonstration tool. It is not a medical device, provides no diagnosis and must not be used for treatment decisions. All signals are synthetic unless stated otherwise."
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version"
+        ],
+        "title": "HealthResponse"
+      },
+      "LabInfo": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "number": {
+            "type": "integer",
+            "title": "Number"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "domains": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Domains"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "available",
+              "planned"
+            ],
+            "title": "Status"
+          },
+          "phase": {
+            "type": "integer",
+            "title": "Phase"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "number",
+          "name",
+          "tagline",
+          "description",
+          "domains",
+          "status",
+          "phase"
+        ],
+        "title": "LabInfo"
+      },
+      "LabType": {
+        "type": "string",
+        "enum": [
+          "ecg",
+          "imaging",
+          "digital-twin",
+          "wearable",
+          "pharmacokinetics",
+          "surgical",
+          "microscopy",
+          "regulatory",
+          "reaction-time",
+          "hmi"
+        ],
+        "title": "LabType"
+      },
+      "ModelInfo": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "description"
+        ],
+        "title": "ModelInfo"
+      },
+      "MovingAverageFilter": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "moving_average",
+            "title": "Type",
+            "default": "moving_average"
+          },
+          "window_ms": {
+            "type": "number",
+            "maximum": 500.0,
+            "minimum": 1.0,
+            "title": "Window Ms",
+            "default": 20.0
+          }
+        },
+        "type": "object",
+        "title": "MovingAverageFilter"
+      },
+      "NoiseParams": {
+        "properties": {
+          "white_sd_mv": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "White Sd Mv",
+            "description": "White Gaussian noise SD",
+            "default": 0.0
+          },
+          "powerline_amplitude_mv": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Powerline Amplitude Mv",
+            "description": "Mains hum amplitude",
+            "default": 0.0
+          },
+          "powerline_frequency_hz": {
+            "type": "integer",
+            "enum": [
+              50,
+              60
+            ],
+            "title": "Powerline Frequency Hz",
+            "description": "Mains frequency",
+            "default": 50
+          },
+          "baseline_amplitude_mv": {
+            "type": "number",
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Baseline Amplitude Mv",
+            "description": "Baseline wander amplitude",
+            "default": 0.0
+          },
+          "baseline_frequency_hz": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.05,
+            "title": "Baseline Frequency Hz",
+            "description": "Baseline wander freq.",
+            "default": 0.3
+          },
+          "muscle_amplitude_mv": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Muscle Amplitude Mv",
+            "description": "EMG artefact RMS amplitude",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "title": "NoiseParams"
+      },
+      "NotchFilter": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "notch",
+            "title": "Type",
+            "default": "notch"
+          },
+          "frequency_hz": {
+            "type": "number",
+            "maximum": 1000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Frequency Hz",
+            "default": 50.0
+          },
+          "quality_factor": {
+            "type": "number",
+            "maximum": 200.0,
+            "minimum": 1.0,
+            "title": "Quality Factor",
+            "default": 30.0
+          }
+        },
+        "type": "object",
+        "title": "NotchFilter"
+      },
+      "Parameter": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "value",
+          "unit"
+        ],
+        "title": "Parameter",
+        "description": "A named, unit-carrying parameter value as stored in an experiment."
+      },
+      "RPeakResult": {
+        "properties": {
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "indices": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Indices"
+          },
+          "times_s": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Times S"
+          },
+          "rr_intervals_s": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Rr Intervals S"
+          },
+          "estimated_hr_bpm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Hr Bpm"
+          },
+          "hr_sd_bpm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hr Sd Bpm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "method",
+          "indices",
+          "times_s",
+          "rr_intervals_s",
+          "estimated_hr_bpm",
+          "hr_sd_bpm"
+        ],
+        "title": "RPeakResult"
+      },
+      "RerunResult": {
+        "properties": {
+          "experiment": {
+            "$ref": "#/components/schemas/ExperimentDetail"
+          },
+          "reproducible": {
+            "type": "boolean",
+            "title": "Reproducible"
+          },
+          "previous_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous Hash"
+          },
+          "new_hash": {
+            "type": "string",
+            "title": "New Hash"
+          }
+        },
+        "type": "object",
+        "required": [
+          "experiment",
+          "reproducible",
+          "previous_hash",
+          "new_hash"
+        ],
+        "title": "RerunResult"
+      },
+      "SignalParams": {
+        "properties": {
+          "heart_rate_bpm": {
+            "type": "number",
+            "maximum": 220.0,
+            "minimum": 30.0,
+            "title": "Heart Rate Bpm",
+            "description": "Nominal heart rate",
+            "default": 72.0
+          },
+          "sampling_rate_hz": {
+            "type": "number",
+            "maximum": 2000.0,
+            "minimum": 100.0,
+            "title": "Sampling Rate Hz",
+            "description": "Sampling rate",
+            "default": 500.0
+          },
+          "duration_s": {
+            "type": "number",
+            "maximum": 60.0,
+            "minimum": 1.0,
+            "title": "Duration S",
+            "description": "Signal duration",
+            "default": 10.0
+          },
+          "rr_variability": {
+            "type": "number",
+            "maximum": 0.2,
+            "minimum": 0.0,
+            "title": "Rr Variability",
+            "description": "Standard deviation of RR jitter as fraction of the nominal RR interval",
+            "default": 0.02
+          },
+          "r_amplitude_mv": {
+            "type": "number",
+            "maximum": 5.0,
+            "minimum": 0.1,
+            "title": "R Amplitude Mv",
+            "description": "R-wave amplitude",
+            "default": 1.0
+          },
+          "first_beat_offset_s": {
+            "type": "number",
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "First Beat Offset S",
+            "description": "Time of the first R-peak",
+            "default": 0.3
+          }
+        },
+        "type": "object",
+        "title": "SignalParams"
+      },
+      "SignalStats": {
+        "properties": {
+          "clean_rms_mv": {
+            "type": "number",
+            "title": "Clean Rms Mv"
+          },
+          "noise_rms_mv": {
+            "type": "number",
+            "title": "Noise Rms Mv"
+          },
+          "residual_rms_mv": {
+            "type": "number",
+            "title": "Residual Rms Mv"
+          },
+          "snr_noisy_db": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snr Noisy Db"
+          },
+          "snr_filtered_db": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snr Filtered Db"
+          }
+        },
+        "type": "object",
+        "required": [
+          "clean_rms_mv",
+          "noise_rms_mv",
+          "residual_rms_mv",
+          "snr_noisy_db",
+          "snr_filtered_db"
+        ],
+        "title": "SignalStats"
+      },
+      "SpectrumResult": {
+        "properties": {
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "frequency_hz": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Frequency Hz"
+          },
+          "noisy_db": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Noisy Db"
+          },
+          "filtered_db": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Filtered Db"
+          }
+        },
+        "type": "object",
+        "required": [
+          "method",
+          "frequency_hz",
+          "noisy_db",
+          "filtered_db"
+        ],
+        "title": "SpectrumResult"
+      },
+      "Unit": {
+        "type": "string",
+        "enum": [
+          "mV",
+          "Hz",
+          "s",
+          "ms",
+          "bpm",
+          "1",
+          "%",
+          "dB"
+        ],
+        "title": "Unit",
+        "description": "Units used across the platform. Every parameter carries one."
+      },
+      "ValidationCheck": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "passed": {
+            "type": "boolean",
+            "title": "Passed"
+          },
+          "expected": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected"
+          },
+          "actual": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actual"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tolerance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tolerance"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "passed"
+        ],
+        "title": "ValidationCheck",
+        "description": "One plausibility or correctness check performed on a result."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

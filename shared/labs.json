@@ -1,0 +1,105 @@
+{
+  "$comment": "Single source of truth for the ten MedLab Studio laboratories. Read by the backend (medlab.labs.registry) and the frontend (src/labs/registry.ts).",
+  "labs": [
+    {
+      "id": "ecg",
+      "number": 1,
+      "name": "ECG Signal Lab",
+      "tagline": "Simulate, corrupt, filter and analyse cardiac signals.",
+      "description": "Generate synthetic ECG signals, add realistic disturbances, apply digital filters and analyse frequencies, R-peaks and heart rate.",
+      "domains": ["Signal processing", "Physics", "Algorithms"],
+      "status": "available",
+      "phase": 1
+    },
+    {
+      "id": "imaging",
+      "number": 2,
+      "name": "Medical Imaging Lab",
+      "tagline": "View, filter and segment medical image data.",
+      "description": "Inspect medical images, apply filters and study segmentation algorithms on synthetic and public datasets.",
+      "domains": ["Image processing", "AI", "Medical informatics"],
+      "status": "planned",
+      "phase": 4
+    },
+    {
+      "id": "digital-twin",
+      "number": 3,
+      "name": "Cardiac Digital Twin",
+      "tagline": "Simplified electrical excitation of cardiac tissue.",
+      "description": "Simulate simplified electrical wave propagation in cardiac tissue and visualise it in 2D, later in 3D.",
+      "domains": ["Mathematical modelling", "Simulation", "3D"],
+      "status": "planned",
+      "phase": 5
+    },
+    {
+      "id": "wearable",
+      "number": 4,
+      "name": "Wearable Sensor Lab",
+      "tagline": "Motion, pulse and sensor streams with live dashboards.",
+      "description": "Examine simulated or imported motion, pulse and sensor data with live dashboards and time-series tools.",
+      "domains": ["Sensors", "Electronics", "Data analysis"],
+      "status": "planned",
+      "phase": 3
+    },
+    {
+      "id": "pharmacokinetics",
+      "number": 5,
+      "name": "Pharmacokinetics Lab",
+      "tagline": "Drug concentration over time in compartment models.",
+      "description": "Simulate drug concentrations, half-lives, clearance and one- or multi-compartment models with repeated dosing.",
+      "domains": ["Pharmacology", "Differential equations", "Modelling"],
+      "status": "planned",
+      "phase": 3
+    },
+    {
+      "id": "surgical",
+      "number": 6,
+      "name": "Surgical Training Lab",
+      "tagline": "Interactive scenarios for surgical workflows.",
+      "description": "Develop interactive training scenarios for surgical procedures, instrument recognition and process steps.",
+      "domains": ["3D", "Human-machine interaction", "Simulation"],
+      "status": "planned",
+      "phase": 5
+    },
+    {
+      "id": "microscopy",
+      "number": 7,
+      "name": "AI Microscopy Lab",
+      "tagline": "Detect and segment cells, compare models.",
+      "description": "Detect and segment cells in microscopy images, compare algorithms and analyse model errors with documented metrics.",
+      "domains": ["Machine learning", "Computer vision", "Biology"],
+      "status": "planned",
+      "phase": 4
+    },
+    {
+      "id": "regulatory",
+      "number": 8,
+      "name": "Regulatory Navigator",
+      "tagline": "Structured requirements with traceable sources.",
+      "description": "Structure regulatory requirements, link sources and build a traceable requirements matrix for MDR and related standards.",
+      "domains": ["MDR", "Standards", "Quality management"],
+      "status": "planned",
+      "phase": 5
+    },
+    {
+      "id": "reaction-time",
+      "number": 9,
+      "name": "Reaction Time Lab",
+      "tagline": "Latency experiments with honest uncertainty.",
+      "description": "Run reaction-time experiments and analyse latencies, spread and measurement error including browser timing limits.",
+      "domains": ["Statistics", "Experimental design", "Metrology"],
+      "status": "planned",
+      "phase": 2
+    },
+    {
+      "id": "hmi",
+      "number": 10,
+      "name": "Human-Machine Interaction Lab",
+      "tagline": "Usability, operating errors and cognitive load.",
+      "description": "Test user interfaces, record operating errors and study usability and cognitive load of medical UI variants.",
+      "domains": ["UX", "Ergonomics", "Statistics", "HMI"],
+      "status": "planned",
+      "phase": 2
+    }
+  ]
+}
