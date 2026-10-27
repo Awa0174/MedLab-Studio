@@ -12,6 +12,14 @@ import { LabPlaceholderPage } from "@/labs/placeholder/LabPlaceholderPage";
 const EcgLabPage = lazy(() =>
   import("@/labs/ecg/EcgLabPage").then((m) => ({ default: m.EcgLabPage })),
 );
+const ReactionTimeLabPage = lazy(() =>
+  import("@/labs/reaction-time/ReactionTimeLabPage").then((m) => ({
+    default: m.ReactionTimeLabPage,
+  })),
+);
+const HmiLabPage = lazy(() =>
+  import("@/labs/hmi/HmiLabPage").then((m) => ({ default: m.HmiLabPage })),
+);
 const ExperimentsPage = lazy(() =>
   import("@/experiments/ExperimentsPage").then((m) => ({ default: m.ExperimentsPage })),
 );
@@ -35,6 +43,8 @@ export function App() {
                 <Route element={<AppShell />}>
                   <Route index element={<DashboardPage />} />
                   <Route path="labs/ecg" element={<EcgLabPage />} />
+                  <Route path="labs/reaction-time" element={<ReactionTimeLabPage />} />
+                  <Route path="labs/hmi" element={<HmiLabPage />} />
                   <Route path="labs/:labId" element={<LabPlaceholderPage />} />
                   <Route path="experiments" element={<ExperimentsPage />} />
                   <Route path="overview" element={<Navigate to="/" replace />} />

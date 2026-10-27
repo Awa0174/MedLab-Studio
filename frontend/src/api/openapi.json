@@ -136,6 +136,194 @@
         }
       }
     },
+    "/api/labs/reaction-time/simulate": {
+      "post": {
+        "tags": [
+          "reaction-time"
+        ],
+        "summary": "Simulate Dataset",
+        "description": "Synthetic ex-Gaussian reaction-time dataset for teaching and testing.",
+        "operationId": "simulate_dataset_api_labs_reaction_time_simulate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReactionSimulationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactionDataset"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/labs/reaction-time/analyze": {
+      "post": {
+        "tags": [
+          "reaction-time"
+        ],
+        "summary": "Analyze Dataset",
+        "description": "Statistics, outliers, trend, uncertainty budget and validation for a dataset.",
+        "operationId": "analyze_dataset_api_labs_reaction_time_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReactionDataset"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactionAnalysisResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/labs/hmi/tasks": {
+      "get": {
+        "tags": [
+          "hmi"
+        ],
+        "summary": "Tasks",
+        "description": "Seeded task catalogue for the infusion-pump scenario.",
+        "operationId": "tasks_api_labs_hmi_tasks_get",
+        "parameters": [
+          {
+            "name": "seed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 2147483647,
+              "minimum": 0,
+              "default": 42,
+              "title": "Seed"
+            }
+          },
+          {
+            "name": "n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 16,
+              "minimum": 3,
+              "default": 6,
+              "title": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HmiTaskSpec"
+                  },
+                  "title": "Response Tasks Api Labs Hmi Tasks Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/labs/hmi/analyze": {
+      "post": {
+        "tags": [
+          "hmi"
+        ],
+        "summary": "Analyze Dataset",
+        "description": "Classify errors and compare the two interface variants.",
+        "operationId": "analyze_dataset_api_labs_hmi_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HmiDataset"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HmiAnalysisResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/experiments": {
       "get": {
         "tags": [
@@ -348,6 +536,205 @@
   },
   "components": {
     "schemas": {
+      "AnalysedTaskResult": {
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Task Id"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/HmiVariant"
+          },
+          "order_index": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Order Index"
+          },
+          "duration_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Duration Ms"
+          },
+          "submitted_field": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Field"
+          },
+          "submitted_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Value"
+          },
+          "submitted_unit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Unit"
+          },
+          "submitted_alarm": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Alarm"
+          },
+          "raw_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Text"
+          },
+          "interactions": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Interactions",
+            "default": 0
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed",
+            "default": true
+          },
+          "timed_out": {
+            "type": "boolean",
+            "title": "Timed Out",
+            "default": false
+          },
+          "kind": {
+            "$ref": "#/components/schemas/HmiTaskKind"
+          },
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/HmiError"
+            },
+            "type": "array",
+            "title": "Errors"
+          }
+        },
+        "type": "object",
+        "required": [
+          "task_id",
+          "variant",
+          "order_index",
+          "duration_ms",
+          "kind",
+          "success",
+          "errors"
+        ],
+        "title": "AnalysedTaskResult"
+      },
+      "AnalysedTrial": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Index"
+          },
+          "condition": {
+            "type": "string",
+            "maxLength": 16,
+            "title": "Condition",
+            "description": "'simple' or the stimulus side"
+          },
+          "foreperiod_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Foreperiod Ms"
+          },
+          "reaction_ms": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reaction Ms",
+            "description": "None if timed out"
+          },
+          "response": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response"
+          },
+          "correct": {
+            "type": "boolean",
+            "title": "Correct",
+            "default": true
+          },
+          "anticipated": {
+            "type": "boolean",
+            "title": "Anticipated",
+            "default": false
+          },
+          "timed_out": {
+            "type": "boolean",
+            "title": "Timed Out",
+            "default": false
+          },
+          "valid": {
+            "type": "boolean",
+            "title": "Valid"
+          },
+          "outlier": {
+            "type": "boolean",
+            "title": "Outlier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "index",
+          "condition",
+          "foreperiod_ms",
+          "valid",
+          "outlier"
+        ],
+        "title": "AnalysedTrial"
+      },
       "AnalysisParams": {
         "properties": {
           "detect_r_peaks": {
@@ -411,6 +798,162 @@
         "type": "object",
         "title": "BandpassFilter"
       },
+      "ComparisonResult": {
+        "properties": {
+          "n_a": {
+            "type": "integer",
+            "title": "N A"
+          },
+          "n_b": {
+            "type": "integer",
+            "title": "N B"
+          },
+          "mean_diff": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mean Diff"
+          },
+          "median_diff": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Diff"
+          },
+          "welch_t": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Welch T"
+          },
+          "welch_df": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Welch Df"
+          },
+          "welch_p": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Welch P"
+          },
+          "mann_whitney_u": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mann Whitney U"
+          },
+          "mann_whitney_p": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mann Whitney P"
+          },
+          "cohens_d": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cohens D"
+          },
+          "cliffs_delta": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cliffs Delta"
+          },
+          "ci95_median_diff_low": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ci95 Median Diff Low"
+          },
+          "ci95_median_diff_high": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ci95 Median Diff High"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n_a",
+          "n_b",
+          "mean_diff",
+          "median_diff",
+          "welch_t",
+          "welch_df",
+          "welch_p",
+          "mann_whitney_u",
+          "mann_whitney_p",
+          "cohens_d",
+          "cliffs_delta",
+          "ci95_median_diff_low",
+          "ci95_median_diff_high",
+          "note"
+        ],
+        "title": "ComparisonResult",
+        "description": "Two independent samples compared with parametric and non-parametric tests."
+      },
       "DataSource": {
         "properties": {
           "kind": {
@@ -418,7 +961,8 @@
             "enum": [
               "synthetic",
               "public",
-              "anonymised"
+              "anonymised",
+              "measured"
             ],
             "title": "Kind"
           },
@@ -449,6 +993,223 @@
           "description"
         ],
         "title": "DataSource"
+      },
+      "DescriptiveStats": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "mean": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mean"
+          },
+          "sd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sd"
+          },
+          "sem": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sem"
+          },
+          "median": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median"
+          },
+          "mad": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mad"
+          },
+          "q1": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Q1"
+          },
+          "q3": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Q3"
+          },
+          "iqr": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iqr"
+          },
+          "p5": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P5"
+          },
+          "p95": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P95"
+          },
+          "min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min"
+          },
+          "max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max"
+          },
+          "trimmed_mean_10": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trimmed Mean 10"
+          },
+          "ci95_mean_low": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ci95 Mean Low"
+          },
+          "ci95_mean_high": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ci95 Mean High"
+          },
+          "ci95_median_low": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ci95 Median Low"
+          },
+          "ci95_median_high": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ci95 Median High"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n",
+          "mean",
+          "sd",
+          "sem",
+          "median",
+          "mad",
+          "q1",
+          "q3",
+          "iqr",
+          "p5",
+          "p95",
+          "min",
+          "max",
+          "trimmed_mean_10",
+          "ci95_mean_low",
+          "ci95_mean_high",
+          "ci95_median_low",
+          "ci95_median_high"
+        ],
+        "title": "DescriptiveStats"
       },
       "EcgSimulationRequest": {
         "properties": {
@@ -875,6 +1636,614 @@
         ],
         "title": "HealthResponse"
       },
+      "Histogram": {
+        "properties": {
+          "bin_edges": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Bin Edges"
+          },
+          "counts": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Counts"
+          },
+          "bin_width": {
+            "type": "number",
+            "title": "Bin Width"
+          },
+          "rule": {
+            "type": "string",
+            "title": "Rule"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bin_edges",
+          "counts",
+          "bin_width",
+          "rule"
+        ],
+        "title": "Histogram"
+      },
+      "HmiAnalysisResponse": {
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/ModelInfo"
+          },
+          "algorithm_versions": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Algorithm Versions"
+          },
+          "parameters": {
+            "items": {
+              "$ref": "#/components/schemas/Parameter"
+            },
+            "type": "array",
+            "title": "Parameters"
+          },
+          "data_source": {
+            "$ref": "#/components/schemas/DataSource"
+          },
+          "variants": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/HmiVariantSummary"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/HmiVariant"
+            },
+            "type": "object",
+            "title": "Variants"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/HmiComparison"
+          },
+          "by_kind": {
+            "items": {
+              "$ref": "#/components/schemas/HmiTaskKindSummary"
+            },
+            "type": "array",
+            "title": "By Kind"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysedTaskResult"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "validation": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationCheck"
+            },
+            "type": "array",
+            "title": "Validation"
+          },
+          "result_hash": {
+            "type": "string",
+            "title": "Result Hash"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "algorithm_versions",
+          "parameters",
+          "data_source",
+          "variants",
+          "comparison",
+          "by_kind",
+          "results",
+          "validation",
+          "result_hash"
+        ],
+        "title": "HmiAnalysisResponse"
+      },
+      "HmiComparison": {
+        "properties": {
+          "time": {
+            "$ref": "#/components/schemas/ComparisonResult"
+          },
+          "errors": {
+            "$ref": "#/components/schemas/RateComparison"
+          },
+          "success": {
+            "$ref": "#/components/schemas/RateComparison"
+          }
+        },
+        "type": "object",
+        "required": [
+          "time",
+          "errors",
+          "success"
+        ],
+        "title": "HmiComparison"
+      },
+      "HmiDataset": {
+        "properties": {
+          "design": {
+            "$ref": "#/components/schemas/HmiDesign"
+          },
+          "timing": {
+            "$ref": "#/components/schemas/TimingInfo"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/HmiTaskResult"
+            },
+            "type": "array",
+            "maxItems": 64,
+            "minItems": 1,
+            "title": "Results"
+          },
+          "tlx": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TlxRating"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/HmiVariant"
+            },
+            "type": "object",
+            "title": "Tlx"
+          }
+        },
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "title": "HmiDataset"
+      },
+      "HmiDesign": {
+        "properties": {
+          "seed": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "default": 42
+          },
+          "tasks_per_variant": {
+            "type": "integer",
+            "maximum": 16.0,
+            "minimum": 3.0,
+            "title": "Tasks Per Variant",
+            "default": 6
+          },
+          "variant_order": {
+            "type": "string",
+            "enum": [
+              "AB",
+              "BA"
+            ],
+            "title": "Variant Order",
+            "description": "Which variant is used first",
+            "default": "AB"
+          },
+          "timeout_ms": {
+            "type": "number",
+            "maximum": 600000.0,
+            "minimum": 5000.0,
+            "title": "Timeout Ms",
+            "default": 60000.0
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/HmiTaskSpec"
+            },
+            "type": "array",
+            "maxItems": 32,
+            "title": "Tasks"
+          }
+        },
+        "type": "object",
+        "title": "HmiDesign"
+      },
+      "HmiError": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/HmiErrorType"
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "detail"
+        ],
+        "title": "HmiError"
+      },
+      "HmiErrorType": {
+        "type": "string",
+        "enum": [
+          "wrong_value",
+          "unit_error",
+          "decimal_error",
+          "wrong_field",
+          "out_of_range",
+          "premature_confirm",
+          "wrong_alarm",
+          "timeout"
+        ],
+        "title": "HmiErrorType"
+      },
+      "HmiTaskKind": {
+        "type": "string",
+        "enum": [
+          "set_rate",
+          "set_vtbi",
+          "set_bolus",
+          "ack_alarm"
+        ],
+        "title": "HmiTaskKind"
+      },
+      "HmiTaskKindSummary": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/HmiTaskKind"
+          },
+          "n_a": {
+            "type": "integer",
+            "title": "N A"
+          },
+          "n_b": {
+            "type": "integer",
+            "title": "N B"
+          },
+          "median_time_a_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Time A Ms"
+          },
+          "median_time_b_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Time B Ms"
+          },
+          "errors_a": {
+            "type": "integer",
+            "title": "Errors A"
+          },
+          "errors_b": {
+            "type": "integer",
+            "title": "Errors B"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "n_a",
+          "n_b",
+          "median_time_a_ms",
+          "median_time_b_ms",
+          "errors_a",
+          "errors_b"
+        ],
+        "title": "HmiTaskKindSummary"
+      },
+      "HmiTaskResult": {
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Task Id"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/HmiVariant"
+          },
+          "order_index": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Order Index"
+          },
+          "duration_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Duration Ms"
+          },
+          "submitted_field": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Field"
+          },
+          "submitted_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Value"
+          },
+          "submitted_unit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Unit"
+          },
+          "submitted_alarm": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted Alarm"
+          },
+          "raw_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Text"
+          },
+          "interactions": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Interactions",
+            "default": 0
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed",
+            "default": true
+          },
+          "timed_out": {
+            "type": "boolean",
+            "title": "Timed Out",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "task_id",
+          "variant",
+          "order_index",
+          "duration_ms"
+        ],
+        "title": "HmiTaskResult"
+      },
+      "HmiTaskSpec": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/HmiTaskKind"
+          },
+          "instruction": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Instruction"
+          },
+          "target_field": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Target Field",
+            "description": "rate | vtbi | bolus | alarm"
+          },
+          "target_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Value",
+            "description": "Numeric target, None for alarms"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "tolerance": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Tolerance",
+            "default": 0.001
+          },
+          "min_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Value"
+          },
+          "max_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Value"
+          },
+          "alarm_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alarm Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "instruction",
+          "target_field"
+        ],
+        "title": "HmiTaskSpec"
+      },
+      "HmiVariant": {
+        "type": "string",
+        "enum": [
+          "A",
+          "B"
+        ],
+        "title": "HmiVariant"
+      },
+      "HmiVariantSummary": {
+        "properties": {
+          "variant": {
+            "$ref": "#/components/schemas/HmiVariant"
+          },
+          "n_tasks": {
+            "type": "integer",
+            "title": "N Tasks"
+          },
+          "n_success": {
+            "type": "integer",
+            "title": "N Success"
+          },
+          "success_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Success Rate"
+          },
+          "time": {
+            "$ref": "#/components/schemas/DescriptiveStats"
+          },
+          "errors_total": {
+            "type": "integer",
+            "title": "Errors Total"
+          },
+          "errors_by_type": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Errors By Type"
+          },
+          "interactions_mean": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interactions Mean"
+          },
+          "tlx": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TlxRating"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tlx_overall": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tlx Overall"
+          }
+        },
+        "type": "object",
+        "required": [
+          "variant",
+          "n_tasks",
+          "n_success",
+          "success_rate",
+          "time",
+          "errors_total",
+          "errors_by_type",
+          "interactions_mean",
+          "tlx",
+          "tlx_overall"
+        ],
+        "title": "HmiVariantSummary"
+      },
       "LabInfo": {
         "properties": {
           "id": {
@@ -1178,6 +2547,414 @@
         ],
         "title": "RPeakResult"
       },
+      "RateComparison": {
+        "properties": {
+          "k_a": {
+            "type": "integer",
+            "title": "K A"
+          },
+          "n_a": {
+            "type": "integer",
+            "title": "N A"
+          },
+          "k_b": {
+            "type": "integer",
+            "title": "K B"
+          },
+          "n_b": {
+            "type": "integer",
+            "title": "N B"
+          },
+          "rate_a": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate A"
+          },
+          "rate_b": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate B"
+          },
+          "risk_difference": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Difference"
+          },
+          "odds_ratio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Odds Ratio"
+          },
+          "fisher_p": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fisher P"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "k_a",
+          "n_a",
+          "k_b",
+          "n_b",
+          "rate_a",
+          "rate_b",
+          "risk_difference",
+          "odds_ratio",
+          "fisher_p",
+          "note"
+        ],
+        "title": "RateComparison",
+        "description": "Two proportions (e.g. error rates) compared with Fisher's exact test."
+      },
+      "ReactionAnalysisResponse": {
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/ModelInfo"
+          },
+          "algorithm_versions": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Algorithm Versions"
+          },
+          "parameters": {
+            "items": {
+              "$ref": "#/components/schemas/Parameter"
+            },
+            "type": "array",
+            "title": "Parameters"
+          },
+          "data_source": {
+            "$ref": "#/components/schemas/DataSource"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/TrialCounts"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/DescriptiveStats"
+          },
+          "summary_without_outliers": {
+            "$ref": "#/components/schemas/DescriptiveStats"
+          },
+          "by_condition": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DescriptiveStats"
+            },
+            "type": "object",
+            "title": "By Condition"
+          },
+          "histogram": {
+            "$ref": "#/components/schemas/Histogram"
+          },
+          "trend": {
+            "$ref": "#/components/schemas/TrendResult"
+          },
+          "trials": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysedTrial"
+            },
+            "type": "array",
+            "title": "Trials"
+          },
+          "uncertainty": {
+            "$ref": "#/components/schemas/UncertaintyBudget"
+          },
+          "validation": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationCheck"
+            },
+            "type": "array",
+            "title": "Validation"
+          },
+          "result_hash": {
+            "type": "string",
+            "title": "Result Hash"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "algorithm_versions",
+          "parameters",
+          "data_source",
+          "counts",
+          "summary",
+          "summary_without_outliers",
+          "by_condition",
+          "histogram",
+          "trend",
+          "trials",
+          "uncertainty",
+          "validation",
+          "result_hash"
+        ],
+        "title": "ReactionAnalysisResponse"
+      },
+      "ReactionDataset": {
+        "properties": {
+          "design": {
+            "$ref": "#/components/schemas/ReactionDesign"
+          },
+          "timing": {
+            "$ref": "#/components/schemas/TimingInfo"
+          },
+          "trials": {
+            "items": {
+              "$ref": "#/components/schemas/ReactionTrial"
+            },
+            "type": "array",
+            "maxItems": 2000,
+            "minItems": 1,
+            "title": "Trials"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "measured",
+              "synthetic"
+            ],
+            "title": "Source",
+            "default": "measured"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trials"
+        ],
+        "title": "ReactionDataset"
+      },
+      "ReactionDesign": {
+        "properties": {
+          "task": {
+            "$ref": "#/components/schemas/ReactionTask",
+            "default": "simple"
+          },
+          "n_trials": {
+            "type": "integer",
+            "maximum": 500.0,
+            "minimum": 5.0,
+            "title": "N Trials",
+            "default": 30
+          },
+          "foreperiod_min_ms": {
+            "type": "number",
+            "maximum": 10000.0,
+            "minimum": 200.0,
+            "title": "Foreperiod Min Ms",
+            "description": "Shortest wait",
+            "default": 1000.0
+          },
+          "foreperiod_max_ms": {
+            "type": "number",
+            "maximum": 10000.0,
+            "minimum": 200.0,
+            "title": "Foreperiod Max Ms",
+            "description": "Longest wait",
+            "default": 3000.0
+          },
+          "timeout_ms": {
+            "type": "number",
+            "maximum": 10000.0,
+            "minimum": 300.0,
+            "title": "Timeout Ms",
+            "description": "No response after this",
+            "default": 2000.0
+          },
+          "anticipation_threshold_ms": {
+            "type": "number",
+            "maximum": 300.0,
+            "minimum": 0.0,
+            "title": "Anticipation Threshold Ms",
+            "description": "Reactions faster than this are anticipations",
+            "default": 100.0
+          },
+          "seed": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "description": "Foreperiods, stimulus sides, bootstrap",
+            "default": 42
+          }
+        },
+        "type": "object",
+        "title": "ReactionDesign"
+      },
+      "ReactionSimulationRequest": {
+        "properties": {
+          "design": {
+            "$ref": "#/components/schemas/ReactionDesign"
+          },
+          "mu_ms": {
+            "type": "number",
+            "maximum": 2000.0,
+            "minimum": 50.0,
+            "title": "Mu Ms",
+            "description": "Gaussian component mean",
+            "default": 250.0
+          },
+          "sigma_ms": {
+            "type": "number",
+            "maximum": 500.0,
+            "minimum": 1.0,
+            "title": "Sigma Ms",
+            "description": "Gaussian component SD",
+            "default": 30.0
+          },
+          "tau_ms": {
+            "type": "number",
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Tau Ms",
+            "description": "Exponential tail mean",
+            "default": 80.0
+          },
+          "choice_penalty_ms": {
+            "type": "number",
+            "maximum": 500.0,
+            "minimum": 0.0,
+            "title": "Choice Penalty Ms",
+            "description": "Added for choice tasks",
+            "default": 80.0
+          },
+          "error_rate": {
+            "type": "number",
+            "maximum": 0.5,
+            "minimum": 0.0,
+            "title": "Error Rate",
+            "description": "Wrong-side responses (choice)",
+            "default": 0.05
+          },
+          "anticipation_rate": {
+            "type": "number",
+            "maximum": 0.5,
+            "minimum": 0.0,
+            "title": "Anticipation Rate",
+            "default": 0.02
+          },
+          "practice_slope_ms_per_trial": {
+            "type": "number",
+            "maximum": 10.0,
+            "minimum": -10.0,
+            "title": "Practice Slope Ms Per Trial",
+            "default": -0.5
+          }
+        },
+        "type": "object",
+        "title": "ReactionSimulationRequest",
+        "description": "Synthetic reaction times from an ex-Gaussian distribution (mu, sigma, tau)."
+      },
+      "ReactionTask": {
+        "type": "string",
+        "enum": [
+          "simple",
+          "choice"
+        ],
+        "title": "ReactionTask"
+      },
+      "ReactionTrial": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Index"
+          },
+          "condition": {
+            "type": "string",
+            "maxLength": 16,
+            "title": "Condition",
+            "description": "'simple' or the stimulus side"
+          },
+          "foreperiod_ms": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Foreperiod Ms"
+          },
+          "reaction_ms": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reaction Ms",
+            "description": "None if timed out"
+          },
+          "response": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response"
+          },
+          "correct": {
+            "type": "boolean",
+            "title": "Correct",
+            "default": true
+          },
+          "anticipated": {
+            "type": "boolean",
+            "title": "Anticipated",
+            "default": false
+          },
+          "timed_out": {
+            "type": "boolean",
+            "title": "Timed Out",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "index",
+          "condition",
+          "foreperiod_ms"
+        ],
+        "title": "ReactionTrial"
+      },
       "RerunResult": {
         "properties": {
           "experiment": {
@@ -1349,6 +3126,310 @@
           "filtered_db"
         ],
         "title": "SpectrumResult"
+      },
+      "TimingInfo": {
+        "properties": {
+          "frame_interval_ms": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frame Interval Ms",
+            "description": "Measured via rAF"
+          },
+          "refresh_rate_hz": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refresh Rate Hz"
+          },
+          "timer_resolution_ms": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timer Resolution Ms",
+            "description": "Smallest performance.now() step"
+          },
+          "user_agent": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Agent"
+          },
+          "method": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Method",
+            "default": "stimulus onset at requestAnimationFrame after paint; response via keydown; performance.now()"
+          }
+        },
+        "type": "object",
+        "title": "TimingInfo",
+        "description": "What the browser could measure about its own timing."
+      },
+      "TlxRating": {
+        "properties": {
+          "mental": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Mental"
+          },
+          "physical": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Physical"
+          },
+          "temporal": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Temporal"
+          },
+          "performance": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Performance",
+            "description": "0 = perfect, 100 = failure"
+          },
+          "effort": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Effort"
+          },
+          "frustration": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Frustration"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mental",
+          "physical",
+          "temporal",
+          "performance",
+          "effort",
+          "frustration"
+        ],
+        "title": "TlxRating",
+        "description": "NASA-TLX style subjective load, each scale 0-100."
+      },
+      "TrendResult": {
+        "properties": {
+          "slope_per_trial": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slope Per Trial"
+          },
+          "intercept": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intercept"
+          },
+          "r": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "R"
+          },
+          "p_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P Value"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slope_per_trial",
+          "intercept",
+          "r",
+          "p_value",
+          "note"
+        ],
+        "title": "TrendResult",
+        "description": "Linear trend of a value over trial index (practice or fatigue effect)."
+      },
+      "TrialCounts": {
+        "properties": {
+          "n_total": {
+            "type": "integer",
+            "title": "N Total"
+          },
+          "n_valid": {
+            "type": "integer",
+            "title": "N Valid"
+          },
+          "n_anticipated": {
+            "type": "integer",
+            "title": "N Anticipated"
+          },
+          "n_timed_out": {
+            "type": "integer",
+            "title": "N Timed Out"
+          },
+          "n_incorrect": {
+            "type": "integer",
+            "title": "N Incorrect"
+          },
+          "n_outliers": {
+            "type": "integer",
+            "title": "N Outliers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n_total",
+          "n_valid",
+          "n_anticipated",
+          "n_timed_out",
+          "n_incorrect",
+          "n_outliers"
+        ],
+        "title": "TrialCounts"
+      },
+      "UncertaintyBudget": {
+        "properties": {
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/UncertaintyComponent"
+            },
+            "type": "array",
+            "title": "Components"
+          },
+          "combined_standard_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Combined Standard Ms"
+          },
+          "expanded_95_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expanded 95 Ms"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "components",
+          "combined_standard_ms",
+          "expanded_95_ms",
+          "note"
+        ],
+        "title": "UncertaintyBudget"
+      },
+      "UncertaintyComponent": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "random",
+              "systematic"
+            ],
+            "title": "Kind"
+          },
+          "standard_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Standard Ms"
+          },
+          "distribution": {
+            "type": "string",
+            "title": "Distribution"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "kind",
+          "standard_ms",
+          "distribution",
+          "note"
+        ],
+        "title": "UncertaintyComponent"
       },
       "Unit": {
         "type": "string",

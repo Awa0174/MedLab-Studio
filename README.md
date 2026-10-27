@@ -6,8 +6,9 @@ gemeinsame Experiment-Infrastruktur: Modellversion, Parameter mit Einheiten, Zuf
 Validierungsprüfungen und ein Ergebnis-Hash machen jede Simulation speicherbar, wiederholbar
 und vergleichbar.
 
-**Version 0.1 (Milestone 1):** Plattformgerüst mit allen zehn Laboren als Modulkarten, das
-ECG Signal Lab ist vollständig nutzbar.
+**Version 0.2 (Milestone 1 + Phase 2):** Plattformgerüst mit allen zehn Laboren als
+Modulkarten. Nutzbar sind das ECG Signal Lab, das Reaction Time Lab und das Human-Machine
+Interaction Lab.
 
 > **Abgrenzung.** MedLab Studio ist ein Lehr-, Forschungs- und Demonstrationswerkzeug.
 > Es ist kein Medizinprodukt, stellt keine Diagnosen und trifft keine Therapieentscheidungen.
@@ -24,6 +25,22 @@ ECG Signal Lab ist vollständig nutzbar.
 6. R-Zacken-Detektion (Pan–Tompkins), Herzfrequenzschätzung, Spektrum (Welch), SNR vor/nach Filter
 7. Validierungsprüfungen gegen die bekannte Wahrheit, Explain-Panel mit Modell, Annahmen, Grenzen, Quellen
 8. Experimente speichern, laden, erneut berechnen und per Hash auf Reproduzierbarkeit prüfen
+
+## Was das Reaction Time Lab kann
+
+1. Einfache und Wahlreaktionszeit-Experimente im Browser mit geseedeten Vorperioden
+2. Messung von Frame-Intervall und Timer-Auflösung, daraus ein Unsicherheitsbudget nach GUM-Logik
+3. Gültigkeitsregeln (Antizipation, Timeout, Wahlfehler), Tukey-Ausreißer, Übungstrend
+4. Median/MAD, Mittelwert/SD, t- und Bootstrap-Konfidenzintervalle, Histogramm, Trial-Sequenz
+5. Synthetische Ex-Gauß-Datensätze zum Vergleich; Experimente speichern und reproduzieren
+
+## Was das HMI Lab kann
+
+1. Zwei Oberflächenvarianten einer simulierten Infusionspumpe auf demselben Aufgabensatz
+2. Erfassung von Aufgabenzeit, Interaktionen, Eingaben und NASA-TLX-Bewertung je Variante
+3. Fehlerklassifikation im Backend: Dezimal-, Einheiten-, Feld-, Bereichs-, Alarm- und Bestätigungsfehler
+4. Vergleich mit Welch-t, Mann-Whitney-U, Effektgrößen, Fisher-exakt und Bootstrap-KI
+5. Validierung des Designs (balanciert, vollständig bewertet) mit expliziter n-=-1-Einschränkung
 
 ## Voraussetzungen
 
@@ -118,6 +135,8 @@ medlab-studio/
 
 - [docs/architecture.md](docs/architecture.md) – Aufbau, Datenfluss, Entscheidungen
 - [docs/models/ecg.md](docs/models/ecg.md) – Gleichungen, Parameter, Grenzen, Verifikation des EKG-Modells
+- [docs/models/reaction-time.md](docs/models/reaction-time.md) – Zeitmessung, Gültigkeitsregeln, Statistik, Unsicherheitsbudget
+- [docs/models/hmi.md](docs/models/hmi.md) – Varianten, Fehlertaxonomie, Vergleichsstatistik, Grenzen
 
 ## Konfiguration
 
@@ -133,7 +152,8 @@ Umgebungsvariablen mit Präfix `MEDLAB_` (optional):
 
 ## Roadmap
 
-Phase 0 (Fundament) und Phase 1 (ECG Signal Lab) sind mit 0.1 umgesetzt. Die weiteren Labore
-sind als Konzeptseiten angelegt: Reaction Time & HMI (Phase 2), Sensorik & Pharmakokinetik
-(Phase 3), Bildanalyse & Mikroskopie (Phase 4), Digital Twin, OP-Training, Regulatory Navigator
-und Cross-Lab-Workflows (Phase 5).
+Phase 0 (Fundament), Phase 1 (ECG Signal Lab) und Phase 2 (Reaction Time & HMI) sind umgesetzt.
+Das HMI Lab nutzt bereits die Statistikwerkzeuge des Reaction Time Labs (erste Cross-Lab-Verbindung).
+Die weiteren Labore sind als Konzeptseiten angelegt: Sensorik & Pharmakokinetik (Phase 3),
+Bildanalyse & Mikroskopie (Phase 4), Digital Twin, OP-Training, Regulatory Navigator und
+Cross-Lab-Workflows (Phase 5).

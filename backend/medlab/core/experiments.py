@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
+import numpy as np
 from numpy.typing import NDArray
 from pydantic import ValidationError
 from sqlalchemy import select
@@ -16,6 +17,8 @@ from medlab.core import storage
 from medlab.core.models import ExperimentRow
 from medlab.labs.ecg import pipeline as ecg_pipeline
 from medlab.labs.ecg.filters import FilterConfigError
+from medlab.labs.hmi import analysis as hmi_analysis
+from medlab.labs.reaction import analysis as reaction_analysis
 from medlab.schemas.common import DataSource, ModelInfo, Parameter, ValidationCheck
 from medlab.schemas.ecg import EcgSimulationRequest
 from medlab.schemas.experiment import (
@@ -26,6 +29,8 @@ from medlab.schemas.experiment import (
     LabType,
     RerunResult,
 )
+from medlab.schemas.hmi import HmiDataset
+from medlab.schemas.reaction import ReactionDataset
 
 
 class LabNotAvailableError(Exception):
@@ -105,7 +110,81 @@ def _run_ecg(config: dict[str, Any]) -> LabRun:
     )
 
 
-RUNNERS = {LabType.ECG: _run_ecg}
+def _run_reaction(config: dict[str, Any]) -> LabRun:
+    try:
+        ds = ReactionDataset.model_validate(config)
+    except ValidationError as exc:
+        raise InvalidConfigError(str(exc)) from exc
+    resp = reaction_analysis.analyse(ds)
+    rts = np.array(
+        [t.reaction_ms if t.reaction_ms is not None else np.nan for t in resp.trials],
+        dtype=np.float64,
+    )
+    return LabRun(
+        model=resp.model,
+        algorithm_versions=resp.algorithm_versions,
+        parameters=resp.parameters,
+        data_sources=[resp.data_source],
+        validation=resp.validation,
+        seed=ds.design.seed,
+        response=resp.model_dump(mode="json"),
+        summary={
+            "counts": resp.counts.model_dump(),
+            "median_ms": resp.summary.median,
+            "mean_ms": resp.summary.mean,
+            "sd_ms": resp.summary.sd,
+            "task": ds.design.task.value,
+            "source": ds.source,
+        },
+        arrays={
+            "reaction_ms": rts,
+            "valid": np.array([t.valid for t in resp.trials]),
+            "outlier": np.array([t.outlier for t in resp.trials]),
+        },
+        visualization={"chart": "rt-histogram-sequence"},
+        result_hash=resp.result_hash,
+    )
+
+
+def _run_hmi(config: dict[str, Any]) -> LabRun:
+    try:
+        ds = HmiDataset.model_validate(config)
+    except ValidationError as exc:
+        raise InvalidConfigError(str(exc)) from exc
+    resp = hmi_analysis.analyse(ds)
+    return LabRun(
+        model=resp.model,
+        algorithm_versions=resp.algorithm_versions,
+        parameters=resp.parameters,
+        data_sources=[resp.data_source],
+        validation=resp.validation,
+        seed=ds.design.seed,
+        response=resp.model_dump(mode="json"),
+        summary={
+            "variants": {
+                k.value: {
+                    "n_tasks": v.n_tasks,
+                    "success_rate": v.success_rate,
+                    "median_time_ms": v.time.median,
+                    "errors_total": v.errors_total,
+                    "tlx_overall": v.tlx_overall,
+                }
+                for k, v in resp.variants.items()
+            },
+            "time_mann_whitney_p": resp.comparison.time.mann_whitney_p,
+            "errors_fisher_p": resp.comparison.errors.fisher_p,
+        },
+        arrays={
+            "duration_ms": np.array([r.duration_ms for r in resp.results], dtype=np.float64),
+            "variant_is_b": np.array([r.variant.value == "B" for r in resp.results]),
+            "success": np.array([r.success for r in resp.results]),
+        },
+        visualization={"chart": "hmi-ab-compare"},
+        result_hash=resp.result_hash,
+    )
+
+
+RUNNERS = {LabType.ECG: _run_ecg, LabType.REACTION_TIME: _run_reaction, LabType.HMI: _run_hmi}
 
 
 def run_lab(lab_type: LabType, config: dict[str, Any]) -> LabRun:

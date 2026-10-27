@@ -49,7 +49,7 @@ class ValidationCheck(BaseModel):
 
 
 class DataSource(BaseModel):
-    kind: Literal["synthetic", "public", "anonymised"]
+    kind: Literal["synthetic", "public", "anonymised", "measured"]
     name: str
     description: str
     license: str | None = None

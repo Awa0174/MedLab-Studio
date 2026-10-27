@@ -269,8 +269,17 @@ export function EcgLabPage() {
         <SaveExperimentDialog
           open={saveOpen}
           onOpenChange={setSaveOpen}
-          config={sim.request}
+          labType="ecg"
+          config={sim.request as unknown as Record<string, unknown>}
+          defaultName="ECG"
           summary={`${data.true_r_times_s.length} beats, est. ${fmt(data.r_peaks?.estimated_hr_bpm, 1)} bpm`}
+          onSaved={(created) => {
+            loadExperiment(
+              { id: created.id, name: created.name, resultHash: created.result_hash },
+              sim.request!,
+            );
+            setSearchParams({ experiment: created.id }, { replace: true });
+          }}
         />
       ) : null}
     </div>

@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from medlab import __version__
-from medlab.api import ecg, experiments, health, labs
+from medlab.api import ecg, experiments, health, hmi, labs, reaction
 from medlab.config import settings
 from medlab.core.db import run_migrations
 from medlab.schemas.common import DISCLAIMER
@@ -39,6 +39,8 @@ def create_app() -> FastAPI:
     app.include_router(health.router, prefix=api)
     app.include_router(labs.router, prefix=api)
     app.include_router(ecg.router, prefix=api)
+    app.include_router(reaction.router, prefix=api)
+    app.include_router(hmi.router, prefix=api)
     app.include_router(experiments.router, prefix=api)
     return app
 

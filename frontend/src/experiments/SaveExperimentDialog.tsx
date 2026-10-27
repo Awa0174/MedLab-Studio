@@ -1,49 +1,55 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import type { EcgSimulationRequest } from "@/api/client";
+import type { ExperimentDetail, LabType } from "@/api/client";
 import { useCreateExperiment } from "@/api/hooks";
 import { Dialog, DialogContent } from "@/components/ui/Dialog";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/fields";
-import { useEcgStore } from "@/labs/ecg/store";
 
+/**
+ * Generic "save as experiment" dialog. `config` is the lab-specific request body that
+ * the backend re-runs on load or rerun; the caller decides what happens after saving.
+ */
 export function SaveExperimentDialog({
   open,
   onOpenChange,
+  labType,
   config,
   summary,
+  defaultName,
+  onSaved,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  config: EcgSimulationRequest;
+  labType: LabType;
+  config: Record<string, unknown>;
   summary: string;
+  defaultName: string;
+  onSaved: (created: ExperimentDetail) => void;
 }) {
-  const navigate = useNavigate();
   const create = useCreateExperiment();
-  const loadExperiment = useEcgStore((s) => s.loadExperiment);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
   const submit = async () => {
-    const trimmed = name.trim() || `ECG ${new Date().toISOString().slice(0, 16).replace("T", " ")}`;
+    const trimmed =
+      name.trim() || `${defaultName} ${new Date().toISOString().slice(0, 16).replace("T", " ")}`;
     const created = await create.mutateAsync({
       name: trimmed,
-      lab_type: "ecg",
+      lab_type: labType,
       description,
       config,
     });
-    loadExperiment({ id: created.id, name: created.name, resultHash: created.result_hash }, config);
     onOpenChange(false);
     setName("");
     setDescription("");
-    navigate(`/labs/ecg?experiment=${created.id}`, { replace: true });
+    onSaved(created);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         title="Save experiment"
-        description={`Stores the current configuration, seed, model version and results locally. ${summary}.`}
+        description={`Stores the configuration, data, seed, model version and results locally. ${summary}.`}
         footer={
           <>
             <Button variant="ghost" onClick={() => onOpenChange(false)}>
@@ -64,7 +70,7 @@ export function SaveExperimentDialog({
           label="Name"
           value={name}
           onChange={setName}
-          placeholder="e.g. 72 bpm, mains hum, notch + band-pass"
+          placeholder={defaultName}
           autoFocus
         />
         <TextField

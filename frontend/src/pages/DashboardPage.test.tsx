@@ -14,7 +14,7 @@ describe("DashboardPage", () => {
     expect(cards).toHaveLength(10);
     expect(screen.getByText("ECG Signal Lab")).toBeInTheDocument();
     expect(within(screen.getByTestId("lab-card-ecg")).getByText("available")).toBeInTheDocument();
-    expect(screen.getAllByText(/planned · phase/)).toHaveLength(9);
+    expect(screen.getAllByText(/planned · phase/)).toHaveLength(7);
     expect(screen.getByTestId("lab-card-ecg")).toHaveAttribute("href", "/labs/ecg");
   });
 });

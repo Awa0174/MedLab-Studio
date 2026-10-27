@@ -17,6 +17,10 @@ Browser ── http://127.0.0.1:5173 ──► Vite Dev-Server (Frontend)
 
 ## Grundsätze
 
+- **Messende Labore erfassen im Browser, rechnen im Backend.** Reaction Time und HMI
+  schicken ihre Rohdaten als `config` an das Backend, das Gültigkeit, Statistik und
+  Validierung berechnet; ein Rerun wertet dieselben Rohdaten erneut aus und bleibt
+  reproduzierbar.
 - **Signalverarbeitung nur im Backend.** Das Frontend rendert und steuert. Dadurch sind
   Ergebnisse unabhängig vom Browser reproduzierbar und per pytest überprüfbar.
 - **Eine Quelle für Typen.** Pydantic-Schemas erzeugen das OpenAPI-Dokument; daraus
@@ -39,6 +43,9 @@ Browser ── http://127.0.0.1:5173 ──► Vite Dev-Server (Frontend)
 | `schemas/` | Pydantic-Modelle: gemeinsam (`common.py`), Experiment (`experiment.py`), ECG (`ecg.py`) |
 | `labs/registry.py` | Laborliste aus `shared/labs.json` |
 | `labs/ecg/` | `generator.py`, `noise.py`, `filters.py`, `detection.py`, `pipeline.py` |
+| `labs/stats/core.py` | gemeinsame Statistik (deskriptiv, robust, Bootstrap, Welch/Mann-Whitney/Fisher) |
+| `labs/reaction/` | `simulate.py` (Ex-Gauß), `analysis.py` (Gültigkeit, Ausreißer, Trend, Unsicherheitsbudget) |
+| `labs/hmi/` | `tasks.py` (geseedeter Aufgabenkatalog), `analysis.py` (Fehlerklassifikation, A/B-Vergleich) |
 | `core/db.py` | SQLAlchemy-Engine, Session, Alembic-Upgrade |
 | `core/models.py` | ORM-Tabelle `experiments` |
 | `core/storage.py` | Dateiablage je Experiment |
@@ -56,6 +63,10 @@ einen eigenen Router sowie ein eigenes Schema-Modul.
 | `api/` | generierte Typen (`schema.d.ts`), typisierter Client, React-Query-Hooks |
 | `labs/registry.ts` | Laborliste aus `shared/labs.json` |
 | `labs/ecg/` | Store (zustand), Simulation-Hook, Parameterpanel, Charts (ECharts), Ergebnisse, Explain |
+| `labs/reaction-time/` | `engine.ts` (React-freier Block-Runner mit rAF-Onset), Store, Stimulusfläche, Ergebnisse, Explain |
+| `labs/hmi/` | `engine.ts` (Sitzungsablauf), Varianten A/B der Pumpenoberfläche, TLX-Formular, Ergebnisse, Explain |
+| `components/results/` | Metric, ValidationList – von allen Laboren genutzt |
+| `components/charts/` | ECharts-Hook, Histogramm, Trial-Sequenz, gruppierte Balken |
 | `labs/placeholder/` | Konzeptseiten der neun geplanten Labore |
 | `experiments/` | Speichern-Dialog, Experimentliste mit Rerun und Löschen |
 | `components/ui/` | Button, Panel, Badge, Felder (Slider, Switch, Select, Text), Tabs, Dialog, Collapsible |

@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/client";
-import type { ExperimentCreate, LabType } from "@/api/client";
+import type {
+  ExperimentCreate,
+  HmiDataset,
+  LabType,
+  ReactionDataset,
+  ReactionSimulationRequest,
+} from "@/api/client";
 
 export const queryKeys = {
   health: ["health"] as const,
@@ -58,4 +64,22 @@ export function useRerunExperiment() {
       void qc.invalidateQueries({ queryKey: queryKeys.experiment(id) });
     },
   });
+}
+
+export function useSimulateReaction() {
+  return useMutation({
+    mutationFn: (body: ReactionSimulationRequest) => api.reaction.simulate(body),
+  });
+}
+
+export function useAnalyzeReaction() {
+  return useMutation({ mutationFn: (body: ReactionDataset) => api.reaction.analyze(body) });
+}
+
+export function useHmiTasks(seed: number, n: number) {
+  return useQuery({ queryKey: ["hmi", "tasks", seed, n], queryFn: () => api.hmi.tasks(seed, n) });
+}
+
+export function useAnalyzeHmi() {
+  return useMutation({ mutationFn: (body: HmiDataset) => api.hmi.analyze(body) });
 }

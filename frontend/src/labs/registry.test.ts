@@ -10,7 +10,7 @@ describe("lab registry", () => {
   it("has unique ids and the ECG lab available", () => {
     expect(new Set(LABS.map((l) => l.id)).size).toBe(10);
     expect(getLab("ecg")?.status).toBe("available");
-    expect(LABS.filter((l) => l.status === "planned")).toHaveLength(9);
+    expect(LABS.filter((l) => l.status === "planned")).toHaveLength(7);
   });
 
   it("builds lab routes", () => {

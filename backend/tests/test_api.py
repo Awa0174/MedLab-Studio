@@ -15,6 +15,7 @@ def test_labs_lists_ten_labs_with_ecg_available(client: TestClient) -> None:
     assert [lab["number"] for lab in labs] == list(range(1, 11))
     ecg = next(lab for lab in labs if lab["id"] == "ecg")
     assert ecg["status"] == "available"
+    assert sum(1 for lab in labs if lab["status"] == "available") == 3
     assert client.get("/api/labs/nope").status_code == 404
 
 

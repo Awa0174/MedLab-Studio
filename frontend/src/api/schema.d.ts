@@ -75,6 +75,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/labs/reaction-time/simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Simulate Dataset
+         * @description Synthetic ex-Gaussian reaction-time dataset for teaching and testing.
+         */
+        post: operations["simulate_dataset_api_labs_reaction_time_simulate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/labs/reaction-time/analyze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Analyze Dataset
+         * @description Statistics, outliers, trend, uncertainty budget and validation for a dataset.
+         */
+        post: operations["analyze_dataset_api_labs_reaction_time_analyze_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/labs/hmi/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Tasks
+         * @description Seeded task catalogue for the infusion-pump scenario.
+         */
+        get: operations["tasks_api_labs_hmi_tasks_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/labs/hmi/analyze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Analyze Dataset
+         * @description Classify errors and compare the two interface variants.
+         */
+        post: operations["analyze_dataset_api_labs_hmi_analyze_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/experiments": {
         parameters: {
             query?: never;
@@ -132,6 +212,84 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AnalysedTaskResult */
+        AnalysedTaskResult: {
+            /** Task Id */
+            task_id: string;
+            variant: components["schemas"]["HmiVariant"];
+            /** Order Index */
+            order_index: number;
+            /** Duration Ms */
+            duration_ms: number;
+            /** Submitted Field */
+            submitted_field?: string | null;
+            /** Submitted Value */
+            submitted_value?: number | null;
+            /** Submitted Unit */
+            submitted_unit?: string | null;
+            /** Submitted Alarm */
+            submitted_alarm?: string | null;
+            /** Raw Text */
+            raw_text?: string | null;
+            /**
+             * Interactions
+             * @default 0
+             */
+            interactions: number;
+            /**
+             * Confirmed
+             * @default true
+             */
+            confirmed: boolean;
+            /**
+             * Timed Out
+             * @default false
+             */
+            timed_out: boolean;
+            kind: components["schemas"]["HmiTaskKind"];
+            /** Success */
+            success: boolean;
+            /** Errors */
+            errors: components["schemas"]["HmiError"][];
+        };
+        /** AnalysedTrial */
+        AnalysedTrial: {
+            /** Index */
+            index: number;
+            /**
+             * Condition
+             * @description 'simple' or the stimulus side
+             */
+            condition: string;
+            /** Foreperiod Ms */
+            foreperiod_ms: number;
+            /**
+             * Reaction Ms
+             * @description None if timed out
+             */
+            reaction_ms?: number | null;
+            /** Response */
+            response?: string | null;
+            /**
+             * Correct
+             * @default true
+             */
+            correct: boolean;
+            /**
+             * Anticipated
+             * @default false
+             */
+            anticipated: boolean;
+            /**
+             * Timed Out
+             * @default false
+             */
+            timed_out: boolean;
+            /** Valid */
+            valid: boolean;
+            /** Outlier */
+            outlier: boolean;
+        };
         /** AnalysisParams */
         AnalysisParams: {
             /**
@@ -176,19 +334,92 @@ export interface components {
              */
             order: number;
         };
+        /**
+         * ComparisonResult
+         * @description Two independent samples compared with parametric and non-parametric tests.
+         */
+        ComparisonResult: {
+            /** N A */
+            n_a: number;
+            /** N B */
+            n_b: number;
+            /** Mean Diff */
+            mean_diff: number | null;
+            /** Median Diff */
+            median_diff: number | null;
+            /** Welch T */
+            welch_t: number | null;
+            /** Welch Df */
+            welch_df: number | null;
+            /** Welch P */
+            welch_p: number | null;
+            /** Mann Whitney U */
+            mann_whitney_u: number | null;
+            /** Mann Whitney P */
+            mann_whitney_p: number | null;
+            /** Cohens D */
+            cohens_d: number | null;
+            /** Cliffs Delta */
+            cliffs_delta: number | null;
+            /** Ci95 Median Diff Low */
+            ci95_median_diff_low: number | null;
+            /** Ci95 Median Diff High */
+            ci95_median_diff_high: number | null;
+            /** Note */
+            note: string;
+        };
         /** DataSource */
         DataSource: {
             /**
              * Kind
              * @enum {string}
              */
-            kind: "synthetic" | "public" | "anonymised";
+            kind: "synthetic" | "public" | "anonymised" | "measured";
             /** Name */
             name: string;
             /** Description */
             description: string;
             /** License */
             license?: string | null;
+        };
+        /** DescriptiveStats */
+        DescriptiveStats: {
+            /** N */
+            n: number;
+            /** Mean */
+            mean: number | null;
+            /** Sd */
+            sd: number | null;
+            /** Sem */
+            sem: number | null;
+            /** Median */
+            median: number | null;
+            /** Mad */
+            mad: number | null;
+            /** Q1 */
+            q1: number | null;
+            /** Q3 */
+            q3: number | null;
+            /** Iqr */
+            iqr: number | null;
+            /** P5 */
+            p5: number | null;
+            /** P95 */
+            p95: number | null;
+            /** Min */
+            min: number | null;
+            /** Max */
+            max: number | null;
+            /** Trimmed Mean 10 */
+            trimmed_mean_10: number | null;
+            /** Ci95 Mean Low */
+            ci95_mean_low: number | null;
+            /** Ci95 Mean High */
+            ci95_mean_high: number | null;
+            /** Ci95 Median Low */
+            ci95_median_low: number | null;
+            /** Ci95 Median High */
+            ci95_median_high: number | null;
         };
         /** EcgSimulationRequest */
         EcgSimulationRequest: {
@@ -349,6 +580,210 @@ export interface components {
              */
             disclaimer: string;
         };
+        /** Histogram */
+        Histogram: {
+            /** Bin Edges */
+            bin_edges: number[];
+            /** Counts */
+            counts: number[];
+            /** Bin Width */
+            bin_width: number;
+            /** Rule */
+            rule: string;
+        };
+        /** HmiAnalysisResponse */
+        HmiAnalysisResponse: {
+            model: components["schemas"]["ModelInfo"];
+            /** Algorithm Versions */
+            algorithm_versions: {
+                [key: string]: string;
+            };
+            /** Parameters */
+            parameters: components["schemas"]["Parameter"][];
+            data_source: components["schemas"]["DataSource"];
+            /** Variants */
+            variants: {
+                [key: string]: components["schemas"]["HmiVariantSummary"];
+            };
+            comparison: components["schemas"]["HmiComparison"];
+            /** By Kind */
+            by_kind: components["schemas"]["HmiTaskKindSummary"][];
+            /** Results */
+            results: components["schemas"]["AnalysedTaskResult"][];
+            /** Validation */
+            validation: components["schemas"]["ValidationCheck"][];
+            /** Result Hash */
+            result_hash: string;
+        };
+        /** HmiComparison */
+        HmiComparison: {
+            time: components["schemas"]["ComparisonResult"];
+            errors: components["schemas"]["RateComparison"];
+            success: components["schemas"]["RateComparison"];
+        };
+        /** HmiDataset */
+        HmiDataset: {
+            design?: components["schemas"]["HmiDesign"];
+            timing?: components["schemas"]["TimingInfo"];
+            /** Results */
+            results: components["schemas"]["HmiTaskResult"][];
+            /** Tlx */
+            tlx?: {
+                [key: string]: components["schemas"]["TlxRating"] | null;
+            };
+        };
+        /** HmiDesign */
+        HmiDesign: {
+            /**
+             * Seed
+             * @default 42
+             */
+            seed: number;
+            /**
+             * Tasks Per Variant
+             * @default 6
+             */
+            tasks_per_variant: number;
+            /**
+             * Variant Order
+             * @description Which variant is used first
+             * @default AB
+             * @enum {string}
+             */
+            variant_order: "AB" | "BA";
+            /**
+             * Timeout Ms
+             * @default 60000
+             */
+            timeout_ms: number;
+            /** Tasks */
+            tasks?: components["schemas"]["HmiTaskSpec"][];
+        };
+        /** HmiError */
+        HmiError: {
+            type: components["schemas"]["HmiErrorType"];
+            /** Detail */
+            detail: string;
+        };
+        /**
+         * HmiErrorType
+         * @enum {string}
+         */
+        HmiErrorType: "wrong_value" | "unit_error" | "decimal_error" | "wrong_field" | "out_of_range" | "premature_confirm" | "wrong_alarm" | "timeout";
+        /**
+         * HmiTaskKind
+         * @enum {string}
+         */
+        HmiTaskKind: "set_rate" | "set_vtbi" | "set_bolus" | "ack_alarm";
+        /** HmiTaskKindSummary */
+        HmiTaskKindSummary: {
+            kind: components["schemas"]["HmiTaskKind"];
+            /** N A */
+            n_a: number;
+            /** N B */
+            n_b: number;
+            /** Median Time A Ms */
+            median_time_a_ms: number | null;
+            /** Median Time B Ms */
+            median_time_b_ms: number | null;
+            /** Errors A */
+            errors_a: number;
+            /** Errors B */
+            errors_b: number;
+        };
+        /** HmiTaskResult */
+        HmiTaskResult: {
+            /** Task Id */
+            task_id: string;
+            variant: components["schemas"]["HmiVariant"];
+            /** Order Index */
+            order_index: number;
+            /** Duration Ms */
+            duration_ms: number;
+            /** Submitted Field */
+            submitted_field?: string | null;
+            /** Submitted Value */
+            submitted_value?: number | null;
+            /** Submitted Unit */
+            submitted_unit?: string | null;
+            /** Submitted Alarm */
+            submitted_alarm?: string | null;
+            /** Raw Text */
+            raw_text?: string | null;
+            /**
+             * Interactions
+             * @default 0
+             */
+            interactions: number;
+            /**
+             * Confirmed
+             * @default true
+             */
+            confirmed: boolean;
+            /**
+             * Timed Out
+             * @default false
+             */
+            timed_out: boolean;
+        };
+        /** HmiTaskSpec */
+        HmiTaskSpec: {
+            /** Id */
+            id: string;
+            kind: components["schemas"]["HmiTaskKind"];
+            /** Instruction */
+            instruction: string;
+            /**
+             * Target Field
+             * @description rate | vtbi | bolus | alarm
+             */
+            target_field: string;
+            /**
+             * Target Value
+             * @description Numeric target, None for alarms
+             */
+            target_value?: number | null;
+            /** Unit */
+            unit?: string | null;
+            /**
+             * Tolerance
+             * @default 0.001
+             */
+            tolerance: number;
+            /** Min Value */
+            min_value?: number | null;
+            /** Max Value */
+            max_value?: number | null;
+            /** Alarm Id */
+            alarm_id?: string | null;
+        };
+        /**
+         * HmiVariant
+         * @enum {string}
+         */
+        HmiVariant: "A" | "B";
+        /** HmiVariantSummary */
+        HmiVariantSummary: {
+            variant: components["schemas"]["HmiVariant"];
+            /** N Tasks */
+            n_tasks: number;
+            /** N Success */
+            n_success: number;
+            /** Success Rate */
+            success_rate: number | null;
+            time: components["schemas"]["DescriptiveStats"];
+            /** Errors Total */
+            errors_total: number;
+            /** Errors By Type */
+            errors_by_type: {
+                [key: string]: number;
+            };
+            /** Interactions Mean */
+            interactions_mean: number | null;
+            tlx: components["schemas"]["TlxRating"] | null;
+            /** Tlx Overall */
+            tlx_overall: number | null;
+        };
         /** LabInfo */
         LabInfo: {
             /** Id */
@@ -484,6 +919,198 @@ export interface components {
             /** Hr Sd Bpm */
             hr_sd_bpm: number | null;
         };
+        /**
+         * RateComparison
+         * @description Two proportions (e.g. error rates) compared with Fisher's exact test.
+         */
+        RateComparison: {
+            /** K A */
+            k_a: number;
+            /** N A */
+            n_a: number;
+            /** K B */
+            k_b: number;
+            /** N B */
+            n_b: number;
+            /** Rate A */
+            rate_a: number | null;
+            /** Rate B */
+            rate_b: number | null;
+            /** Risk Difference */
+            risk_difference: number | null;
+            /** Odds Ratio */
+            odds_ratio: number | null;
+            /** Fisher P */
+            fisher_p: number | null;
+            /** Note */
+            note: string;
+        };
+        /** ReactionAnalysisResponse */
+        ReactionAnalysisResponse: {
+            model: components["schemas"]["ModelInfo"];
+            /** Algorithm Versions */
+            algorithm_versions: {
+                [key: string]: string;
+            };
+            /** Parameters */
+            parameters: components["schemas"]["Parameter"][];
+            data_source: components["schemas"]["DataSource"];
+            counts: components["schemas"]["TrialCounts"];
+            summary: components["schemas"]["DescriptiveStats"];
+            summary_without_outliers: components["schemas"]["DescriptiveStats"];
+            /** By Condition */
+            by_condition: {
+                [key: string]: components["schemas"]["DescriptiveStats"];
+            };
+            histogram: components["schemas"]["Histogram"];
+            trend: components["schemas"]["TrendResult"];
+            /** Trials */
+            trials: components["schemas"]["AnalysedTrial"][];
+            uncertainty: components["schemas"]["UncertaintyBudget"];
+            /** Validation */
+            validation: components["schemas"]["ValidationCheck"][];
+            /** Result Hash */
+            result_hash: string;
+        };
+        /** ReactionDataset */
+        ReactionDataset: {
+            design?: components["schemas"]["ReactionDesign"];
+            timing?: components["schemas"]["TimingInfo"];
+            /** Trials */
+            trials: components["schemas"]["ReactionTrial"][];
+            /**
+             * Source
+             * @default measured
+             * @enum {string}
+             */
+            source: "measured" | "synthetic";
+        };
+        /** ReactionDesign */
+        ReactionDesign: {
+            /** @default simple */
+            task: components["schemas"]["ReactionTask"];
+            /**
+             * N Trials
+             * @default 30
+             */
+            n_trials: number;
+            /**
+             * Foreperiod Min Ms
+             * @description Shortest wait
+             * @default 1000
+             */
+            foreperiod_min_ms: number;
+            /**
+             * Foreperiod Max Ms
+             * @description Longest wait
+             * @default 3000
+             */
+            foreperiod_max_ms: number;
+            /**
+             * Timeout Ms
+             * @description No response after this
+             * @default 2000
+             */
+            timeout_ms: number;
+            /**
+             * Anticipation Threshold Ms
+             * @description Reactions faster than this are anticipations
+             * @default 100
+             */
+            anticipation_threshold_ms: number;
+            /**
+             * Seed
+             * @description Foreperiods, stimulus sides, bootstrap
+             * @default 42
+             */
+            seed: number;
+        };
+        /**
+         * ReactionSimulationRequest
+         * @description Synthetic reaction times from an ex-Gaussian distribution (mu, sigma, tau).
+         */
+        ReactionSimulationRequest: {
+            design?: components["schemas"]["ReactionDesign"];
+            /**
+             * Mu Ms
+             * @description Gaussian component mean
+             * @default 250
+             */
+            mu_ms: number;
+            /**
+             * Sigma Ms
+             * @description Gaussian component SD
+             * @default 30
+             */
+            sigma_ms: number;
+            /**
+             * Tau Ms
+             * @description Exponential tail mean
+             * @default 80
+             */
+            tau_ms: number;
+            /**
+             * Choice Penalty Ms
+             * @description Added for choice tasks
+             * @default 80
+             */
+            choice_penalty_ms: number;
+            /**
+             * Error Rate
+             * @description Wrong-side responses (choice)
+             * @default 0.05
+             */
+            error_rate: number;
+            /**
+             * Anticipation Rate
+             * @default 0.02
+             */
+            anticipation_rate: number;
+            /**
+             * Practice Slope Ms Per Trial
+             * @default -0.5
+             */
+            practice_slope_ms_per_trial: number;
+        };
+        /**
+         * ReactionTask
+         * @enum {string}
+         */
+        ReactionTask: "simple" | "choice";
+        /** ReactionTrial */
+        ReactionTrial: {
+            /** Index */
+            index: number;
+            /**
+             * Condition
+             * @description 'simple' or the stimulus side
+             */
+            condition: string;
+            /** Foreperiod Ms */
+            foreperiod_ms: number;
+            /**
+             * Reaction Ms
+             * @description None if timed out
+             */
+            reaction_ms?: number | null;
+            /** Response */
+            response?: string | null;
+            /**
+             * Correct
+             * @default true
+             */
+            correct: boolean;
+            /**
+             * Anticipated
+             * @default false
+             */
+            anticipated: boolean;
+            /**
+             * Timed Out
+             * @default false
+             */
+            timed_out: boolean;
+        };
         /** RerunResult */
         RerunResult: {
             experiment: components["schemas"]["ExperimentDetail"];
@@ -556,6 +1183,110 @@ export interface components {
             noisy_db: number[];
             /** Filtered Db */
             filtered_db: number[];
+        };
+        /**
+         * TimingInfo
+         * @description What the browser could measure about its own timing.
+         */
+        TimingInfo: {
+            /**
+             * Frame Interval Ms
+             * @description Measured via rAF
+             */
+            frame_interval_ms?: number | null;
+            /** Refresh Rate Hz */
+            refresh_rate_hz?: number | null;
+            /**
+             * Timer Resolution Ms
+             * @description Smallest performance.now() step
+             */
+            timer_resolution_ms?: number | null;
+            /** User Agent */
+            user_agent?: string | null;
+            /**
+             * Method
+             * @default stimulus onset at requestAnimationFrame after paint; response via keydown; performance.now()
+             */
+            method: string;
+        };
+        /**
+         * TlxRating
+         * @description NASA-TLX style subjective load, each scale 0-100.
+         */
+        TlxRating: {
+            /** Mental */
+            mental: number;
+            /** Physical */
+            physical: number;
+            /** Temporal */
+            temporal: number;
+            /**
+             * Performance
+             * @description 0 = perfect, 100 = failure
+             */
+            performance: number;
+            /** Effort */
+            effort: number;
+            /** Frustration */
+            frustration: number;
+        };
+        /**
+         * TrendResult
+         * @description Linear trend of a value over trial index (practice or fatigue effect).
+         */
+        TrendResult: {
+            /** Slope Per Trial */
+            slope_per_trial: number | null;
+            /** Intercept */
+            intercept: number | null;
+            /** R */
+            r: number | null;
+            /** P Value */
+            p_value: number | null;
+            /** Note */
+            note: string;
+        };
+        /** TrialCounts */
+        TrialCounts: {
+            /** N Total */
+            n_total: number;
+            /** N Valid */
+            n_valid: number;
+            /** N Anticipated */
+            n_anticipated: number;
+            /** N Timed Out */
+            n_timed_out: number;
+            /** N Incorrect */
+            n_incorrect: number;
+            /** N Outliers */
+            n_outliers: number;
+        };
+        /** UncertaintyBudget */
+        UncertaintyBudget: {
+            /** Components */
+            components: components["schemas"]["UncertaintyComponent"][];
+            /** Combined Standard Ms */
+            combined_standard_ms: number | null;
+            /** Expanded 95 Ms */
+            expanded_95_ms: number | null;
+            /** Note */
+            note: string;
+        };
+        /** UncertaintyComponent */
+        UncertaintyComponent: {
+            /** Name */
+            name: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "random" | "systematic";
+            /** Standard Ms */
+            standard_ms: number | null;
+            /** Distribution */
+            distribution: string;
+            /** Note */
+            note: string;
         };
         /**
          * Unit
@@ -695,6 +1426,137 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EcgSimulationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    simulate_dataset_api_labs_reaction_time_simulate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReactionSimulationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReactionDataset"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    analyze_dataset_api_labs_reaction_time_analyze_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReactionDataset"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReactionAnalysisResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    tasks_api_labs_hmi_tasks_get: {
+        parameters: {
+            query?: {
+                seed?: number;
+                n?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HmiTaskSpec"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    analyze_dataset_api_labs_hmi_analyze_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HmiDataset"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HmiAnalysisResponse"];
                 };
             };
             /** @description Validation Error */
